@@ -19,7 +19,7 @@ export class VoiceController {
   }
 
   // Fetch voices - now only returns custom voices
-  public async fetchVoices(): Promise<{voices: CustomVoice[], success: boolean}> {
+  public async fetchVoices(): Promise<{ voices: CustomVoice[], success: boolean }> {
     try {
       // Only return custom voices, skip API call entirely
       if (customVoices.length > 0) {
@@ -34,14 +34,14 @@ export class VoiceController {
     }
   }
 
-  // Generate voice from text
+  // Generate voice from text using server-side API proxy
   public async generateVoice(
     voiceId: string,
     text: string,
     modelId: string
   ): Promise<{ audioUrl: string | null, success: boolean, error: string | null }> {
     try {
-      if (!this.apiKey || !voiceId || !text) {
+      if (!voiceId || !text) {
         return {
           audioUrl: null,
           success: false,
@@ -49,19 +49,17 @@ export class VoiceController {
         };
       }
 
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      // Instead of sending the API key directly in the client-side request,
+      // call a server-side API endpoint that will make the request to ElevenLabs
+      const response = await fetch('/api/generate-voice', {
         method: 'POST',
         headers: {
-          'xi-api-key': this.apiKey,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          voiceId: voiceId,
           text: text,
-          model_id: modelId,
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5
-          }
+          modelId: modelId,
         }),
       });
 

@@ -9,8 +9,7 @@ interface Model {
 }
 
 function App() {
-  // Use environment variable for API key
-  const [apiKey, setApiKey] = useState<string>(import.meta.env.VITE_ELEVENLABS_API_KEY || '');
+  // We no longer expose the API key to the client
   const [voices, setVoices] = useState<CustomVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [inputText, setInputText] = useState<string>('');
@@ -22,8 +21,8 @@ function App() {
   const [showCustomVoiceMessage, setShowCustomVoiceMessage] = useState(false);
   const [showWarningMessage, setShowWarningMessage] = useState(true);
 
-  // Create voice controller
-  const [voiceController] = useState<VoiceController>(new VoiceController(apiKey));
+  // Create voice controller (no API key needed in constructor)
+  const [voiceController] = useState<VoiceController>(new VoiceController(''));
 
   const models: Model[] = [
     {
@@ -42,11 +41,6 @@ function App() {
   useEffect(() => {
     fetchVoices();
   }, []);
-
-  // Update API key in controller when it changes
-  useEffect(() => {
-    voiceController.setApiKey(apiKey);
-  }, [apiKey, voiceController]);
 
   // Clear generated audio when inputs change
   useEffect(() => {
@@ -79,7 +73,7 @@ function App() {
   };
 
   const handleGenerateVoice = async () => {
-    if (!apiKey || !selectedVoice || !inputText) {
+    if (!selectedVoice || !inputText) {
       setError('Please select a voice and enter some text.');
       return;
     }
@@ -269,7 +263,7 @@ function App() {
           {/* Generation Button */}
           <button
             onClick={handleGenerateVoice}
-            disabled={!apiKey || !selectedVoice || !inputText || isLoading || serverStatus === 'down'}
+            disabled={!selectedVoice || !inputText || isLoading || serverStatus === 'down'}
             className="button-success w-full"
           >
             {isLoading ? (

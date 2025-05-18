@@ -1,6 +1,7 @@
 [build]
   command = "bun run build"
   publish = "dist"
+  functions = "netlify/functions"
 
 [dev]
   command = "bun run dev"
@@ -9,6 +10,14 @@
   publish = "dist"
   framework = "vite"
 
+# Redirect API requests to the serverless function
+[[redirects]]
+  from = "/api/generate-voice"
+  to = "/.netlify/functions/generate-voice"
+  status = 200
+  force = true
+
+# Redirect all other requests to the SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
