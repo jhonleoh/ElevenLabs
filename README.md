@@ -5,9 +5,8 @@ A simple React application for generating AI voices using the ElevenLabs API.
 ## Features
 
 - Generate high-quality AI voices using ElevenLabs models
-- Select from available ElevenLabs voices
-- Add and use custom voice models
-- Custom voices are automatically included with ElevenLabs voices
+- Use custom voice models defined in a separate file
+- No API calls to fetch voices - complete control over available voices
 - Choose between different quality models:
   - Multilingual v2 (higher quality, multiple languages)
   - Flash v2.5 (faster generation)
@@ -15,13 +14,15 @@ A simple React application for generating AI voices using the ElevenLabs API.
 
 ## Custom Voices
 
-You can add custom voice models to the application by editing the `src/customVoices.ts` file. This allows you to:
+This application uses only custom-defined voices rather than fetching them from the ElevenLabs API. This gives you complete control over which voices appear in the dropdown menu.
 
-- Add your own voices with custom IDs
-- Maintain a separate list from the default ElevenLabs voices
-- Custom voices appear alongside ElevenLabs voices in the dropdown
+You can:
+- Define which ElevenLabs voice IDs are available in the app
+- Set custom names for each voice
 
-For detailed instructions on adding custom voices, see [CUSTOM_VOICES.md](src/CUSTOM_VOICES.md).
+All voices are defined in the `src/customVoices.ts` file, which includes several example voices that you can use or replace with your own.
+
+For detailed instructions on managing custom voices, see [CUSTOM_VOICES.md](src/CUSTOM_VOICES.md).
 
 ## Setup
 

@@ -18,47 +18,18 @@ export class VoiceController {
     this.apiKey = apiKey;
   }
 
-  // Fetch voices from API, always including custom voices
+  // Fetch voices - now only returns custom voices
   public async fetchVoices(): Promise<{voices: CustomVoice[], success: boolean}> {
     try {
-      // If no API key but we have custom voices, return only custom voices
-      if (!this.apiKey && customVoices.length > 0) {
-        return { voices: customVoices, success: true };
-      }
-
-      // If no API key and no custom voices, return empty array
-      if (!this.apiKey) {
-        return { voices: [], success: false };
-      }
-
-      // Fetch voices from API
-      const response = await fetch('https://api.elevenlabs.io/v1/voices', {
-        headers: {
-          'xi-api-key': this.apiKey
-        }
-      });
-
-      if (!response.ok) {
-        // If API request failed but we have custom voices
-        if (customVoices.length > 0) {
-          return { voices: customVoices, success: true };
-        }
-        throw new Error('Failed to fetch voices');
-      }
-
-      const data = await response.json();
-      // Always combine API voices with custom voices
-      const combinedVoices = this.combineVoices(data.voices || []);
-
-      return { voices: combinedVoices, success: true };
-    } catch (error) {
-      console.error('Error fetching voices:', error);
-
-      // If there's an error but we have custom voices
+      // Only return custom voices, skip API call entirely
       if (customVoices.length > 0) {
         return { voices: customVoices, success: true };
+      } else {
+        // If no custom voices are defined, return empty array
+        return { voices: [], success: false };
       }
-
+    } catch (error) {
+      console.error('Error fetching voices:', error);
       return { voices: [], success: false };
     }
   }
@@ -118,27 +89,8 @@ export class VoiceController {
     }
   }
 
-  // Check if a voice is a custom voice
+  // Check if a voice is a custom voice - now always returns true since we only use custom voices
   public isCustomVoice(voiceId: string): boolean {
-    return customVoices.some(voice => voice.voice_id === voiceId);
-  }
-
-  // Private method to combine API voices with custom voices
-  private combineVoices(apiVoices: CustomVoice[]): CustomVoice[] {
-    // Create a map of existing voice IDs to avoid duplicates
-    const voiceMap = new Map<string, CustomVoice>();
-
-    // Add API voices to the map
-    apiVoices.forEach(voice => {
-      voiceMap.set(voice.voice_id, voice);
-    });
-
-    // Add custom voices to the map (will override any duplicates from API)
-    customVoices.forEach(voice => {
-      voiceMap.set(voice.voice_id, voice);
-    });
-
-    // Convert map values back to array
-    return Array.from(voiceMap.values());
+    return true; // All voices are now custom
   }
 }

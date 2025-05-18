@@ -2,26 +2,56 @@
 export interface CustomVoice {
   voice_id: string;
   name: string;
-  description?: string;
+  description?: string; // Kept as optional but not used
 }
 
 // Add your custom voices here
 export const customVoices: CustomVoice[] = [
-  // Example custom voice - you can add your own by following this format
+  // Example custom voices - replace with your own ElevenLabs voice IDs
+  {
+    voice_id: "21m00Tcm4TlvDq8ikWAM",
+    name: "Rachel"
+  },
+  {
+    voice_id: "AZnzlk1XvdvUeBnXmlld",
+    name: "Domi"
+  },
+  {
+    voice_id: "EXAVITQu4vr4xnSDxMaL",
+    name: "Bella"
+  },
+  {
+    voice_id: "ErXwobaYiN019PkySvjV",
+    name: "Antoni"
+  },
+  {
+    voice_id: "MF3mGyEYCl7XYWbV9V6O",
+    name: "Elli"
+  },
+  {
+    voice_id: "TxGEqnHWrfWFTfGW9XjX",
+    name: "Josh"
+  },
+  {
+    voice_id: "VR6AewLTigWG4xSOukaG",
+    name: "Arnold"
+  },
   {
     voice_id: "pNInz6obpgDQGcFmaJgB",
-    name: "Adam",
-    description: "Adam (Legacy)"
+    name: "Adam"
   },
-  // Add more custom voices below:
+  {
+    voice_id: "yoZ06aMxZJJ28mfd3POQ",
+    name: "Sam"
+  }
+  // Add your own custom voices below:
   // {
-  //   voice_id: "custom-voice-id-here",
-  //   name: "My Custom Voice",
-  //   description: "Optional description of this voice"
+  //   voice_id: "your-custom-voice-id-here",
+  //   name: "Your Custom Voice"
   // }
 ];
 
-// Function to get combined voices (API voices + custom voices)
+// Function to get combined voices (no longer used but kept for reference)
 export const getCombinedVoices = (apiVoices: CustomVoice[]) => {
-  return [...apiVoices, ...customVoices];
+  return customVoices; // Now just returns custom voices
 };
