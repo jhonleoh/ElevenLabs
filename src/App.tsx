@@ -217,7 +217,7 @@ function App() {
                 {/* Custom Voice Message */}
                 {showCustomVoiceMessage && (
                   <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-sm">
-                    <p className="font-medium text-blue-700 dark:text-blue-300">Custom Voice Options</p>
+                    <p className="font-medium text-blue-700 dark:text-blue-300">Custom Voice Request</p>
                     <p className="mt-1 text-blue-600 dark:text-blue-400">
                       If you want to request a voice from ElevenLabs Library or add a custom voice, contact me on PHCORNER.
                     </p>
