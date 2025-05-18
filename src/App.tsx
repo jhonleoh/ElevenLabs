@@ -222,7 +222,7 @@ function App() {
                       You can add your own custom voices by editing the <code className="bg-blue-100 dark:bg-blue-800 px-1 py-0.5 rounded">customVoices.ts</code> file.
                     </p>
                     <p className="mt-1 text-blue-600 dark:text-blue-400">
-                      If you want to request or add a custom voice, contact me in PHCORNER.
+                      If you want to request a voice from ElevenLabs Library or add a custom voice, contact me on PHCORNER.
                     </p>
                   </div>
                 )}
