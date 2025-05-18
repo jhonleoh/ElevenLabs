@@ -331,7 +331,7 @@ function App() {
         </div>
 
         <footer className="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>Made with ❤️ Ruyi</p>
+          <p>Made with ❤️ by Ruyi</p>
         </footer>
       </div>
     </div>
