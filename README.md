@@ -50,29 +50,6 @@ For detailed instructions on managing custom voices, see [CUSTOM_VOICES.md](src/
 - Vite
 - Tailwind CSS
 
-## Code Protection
-
-This project uses `vite-plugin-bundle-obfuscator` to protect the source code from reverse engineering while maintaining optimal performance:
-
-### Obfuscation Features
-
-- **Performance-Optimized**: The obfuscation settings are carefully balanced to provide strong protection without significantly impacting runtime performance.
-- **Production-Only**: Code obfuscation is only applied during production builds (`bun run build`), not during development.
-- **Comprehensive Protection**: Multiple obfuscation techniques are applied including:
-  - Control flow flattening (moderate level for performance)
-  - Dead code injection (optimized for minimal performance impact)
-  - String array transformations
-  - Identifier mangling
-  - Self-defending code
-
-### How to Build with Obfuscation
-
-```
-bun run build
-```
-
-This command will create an obfuscated production build in the `dist` directory.
-
 ## Credits
 
 Made with ❤️ by Ruyi

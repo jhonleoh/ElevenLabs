@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build --outDir dist",
-    "build:sourcemap": "tsc -b && vite build --outDir dist --sourcemap",
     "lint": "bunx biome lint --write && bunx tsc --noEmit",
     "format": "bunx biome format --write",
     "preview": "vite preview"
@@ -17,8 +16,8 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
     "@eslint/js": "^9.18.0",
+    "@biomejs/biome": "1.9.4",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
@@ -39,7 +38,6 @@
     "tailwindcss": "^3.4.17",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.20.0",
-    "vite": "^6.0.5",
-    "vite-plugin-bundle-obfuscator": "^1.5.0"
+    "vite": "^6.0.5"
   }
 }
