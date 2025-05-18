@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-
-interface Voice {
-  voice_id: string;
-  name: string;
-}
+import { CustomVoice } from './customVoices';
+import { VoiceController } from './voiceController';
 
 interface Model {
   id: string;
@@ -14,7 +11,7 @@ interface Model {
 function App() {
   // Use environment variable for API key
   const [apiKey, setApiKey] = useState<string>(import.meta.env.VITE_ELEVENLABS_API_KEY || '');
-  const [voices, setVoices] = useState<Voice[]>([]);
+  const [voices, setVoices] = useState<CustomVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [inputText, setInputText] = useState<string>('');
   const [generatedAudio, setGeneratedAudio] = useState<string | null>(null);
@@ -24,6 +21,9 @@ function App() {
   const [serverStatus, setServerStatus] = useState<'up' | 'down'>('up');
   const [showCustomVoiceMessage, setShowCustomVoiceMessage] = useState(false);
   const [showWarningMessage, setShowWarningMessage] = useState(true);
+
+  // Create voice controller
+  const [voiceController] = useState<VoiceController>(new VoiceController(apiKey));
 
   const models: Model[] = [
     {
@@ -38,14 +38,15 @@ function App() {
     }
   ];
 
-  // Fetch available voices when component mounts (API key is from env var)
+  // Fetch available voices when component mounts
   useEffect(() => {
-    if (apiKey) {
-      fetchVoices();
-    } else {
-      setServerStatus('down');
-    }
+    fetchVoices();
   }, []);
+
+  // Update API key in controller when it changes
+  useEffect(() => {
+    voiceController.setApiKey(apiKey);
+  }, [apiKey, voiceController]);
 
   // Clear generated audio when inputs change
   useEffect(() => {
@@ -55,20 +56,16 @@ function App() {
   const fetchVoices = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('https://api.elevenlabs.io/v1/voices', {
-        headers: {
-          'xi-api-key': apiKey
-        }
-      });
 
-      if (!response.ok) {
+      const result = await voiceController.fetchVoices();
+
+      if (result.success) {
+        setVoices(result.voices);
+        setServerStatus('up');
+      } else {
         setServerStatus('down');
-        throw new Error('Failed to fetch voices');
       }
 
-      const data = await response.json();
-      setVoices(data.voices || []);
-      setServerStatus('up');
       setIsLoading(false);
     } catch (err) {
       setServerStatus('down');
@@ -92,30 +89,18 @@ function App() {
       setError(null);
       setGeneratedAudio(null); // Clear previous audio before generating new
 
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
-        method: 'POST',
-        headers: {
-          'xi-api-key': apiKey,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: inputText,
-          model_id: selectedModel,
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5
-          }
-        }),
-      });
+      const result = await voiceController.generateVoice(
+        selectedVoice,
+        inputText,
+        selectedModel
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Voice generation failed');
+      if (result.success) {
+        setGeneratedAudio(result.audioUrl);
+      } else {
+        setError(result.error || 'Voice generation failed. Please try again.');
       }
 
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      setGeneratedAudio(audioUrl);
       setIsLoading(false);
     } catch (err) {
       setError('Voice generation failed. Please try again.');
@@ -195,6 +180,7 @@ function App() {
             <div className="grid-responsive">
               <div className="space-y-2">
                 <label htmlFor="voice-select" className="input-label">Select Voice</label>
+
                 {isLoading && !voices.length ? (
                   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-12 rounded-xl"></div>
                 ) : voices.length > 0 ? (
@@ -231,9 +217,12 @@ function App() {
                 {/* Custom Voice Message */}
                 {showCustomVoiceMessage && (
                   <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-sm">
-                    <p className="font-medium text-blue-700 dark:text-blue-300">Need a custom voice?</p>
+                    <p className="font-medium text-blue-700 dark:text-blue-300">Custom Voice Options</p>
                     <p className="mt-1 text-blue-600 dark:text-blue-400">
-                      If you want to add a custom voice, PM me in PHCORNER.
+                      You can add your own custom voices by editing the <code className="bg-blue-100 dark:bg-blue-800 px-1 py-0.5 rounded">customVoices.ts</code> file.
+                    </p>
+                    <p className="mt-1 text-blue-600 dark:text-blue-400">
+                      Each custom voice needs a unique voice_id and name. You can also contact me in PHCORNER for help.
                     </p>
                   </div>
                 )}
