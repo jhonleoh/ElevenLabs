@@ -7,7 +7,9 @@ The original implementation had a security vulnerability where the ElevenLabs AP
 ### Changes Made
 
 1. **Server-side API Proxy**:
-   - Created a server-side Netlify serverless function (`/netlify/functions/generate-voice.js`) that acts as a proxy for the ElevenLabs API.
+   - Created server-side serverless functions that act as a proxy for the ElevenLabs API:
+     - Netlify: `/netlify/functions/generate-voice.js`
+     - Cloudflare: `/functions/generate-voice.js`
    - The API key is now only used on the server side and never exposed to client code.
 
 2. **Client-side Code**:
@@ -16,7 +18,7 @@ The original implementation had a security vulnerability where the ElevenLabs AP
 
 3. **Request Flow**:
    - Client makes a request to `/api/generate-voice` (our own endpoint)
-   - The request is redirected (via Netlify redirects) to the serverless function
+   - The request is redirected to the serverless function
    - The serverless function securely adds the API key and forwards the request to ElevenLabs
    - The response is passed back to the client
 
@@ -24,9 +26,31 @@ The original implementation had a security vulnerability where the ElevenLabs AP
 
 - The API key is never transmitted to the client-side code
 - The API key cannot be extracted from your website's source code
-- Cloudflare environment variables are secure at the server level
+- Server-side environment variables remain secure
 - You retain full control of your ElevenLabs API usage
 
 ## How to Deploy
 
-When deploying to Cloudflare (or any other platform), you still need to set the environment variable `VITE_ELEVENLABS_API_KEY` in your hosting provider's environment settings. The difference is that this variable will now only be accessible to the server-side function, not to any client-side code.
+### Netlify Deployment
+
+When deploying to Netlify:
+
+1. Set the environment variable `VITE_ELEVENLABS_API_KEY` in your Netlify site's environment settings:
+   - Go to Site settings > Environment variables
+   - Add the variable with your ElevenLabs API key
+
+### Cloudflare Pages Deployment
+
+When deploying to Cloudflare Pages:
+
+1. Set the environment variable `VITE_ELEVENLABS_API_KEY` in your Cloudflare Pages settings:
+   - Go to your project in Cloudflare Pages
+   - Navigate to Settings > Environment variables
+   - Add the variable with your ElevenLabs API key
+   - Make sure to set it for both Production and Preview environments
+
+2. Enable Functions in your Cloudflare Pages project:
+   - In your Cloudflare Pages project settings, confirm that Functions are enabled
+   - The `/functions` directory will be automatically deployed as serverless functions
+
+The difference is that in both platforms, the environment variable will now only be accessible to the server-side function, not to any client-side code.

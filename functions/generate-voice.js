@@ -1,43 +1,43 @@
-import fetch from 'node-fetch';
+// Cloudflare Pages Function for ElevenLabs API proxy
 
-export const handler = async function (event, context) {
+export async function onRequest(context) {
+  // Get the current request
+  const { request, env } = context;
+
   // Only allow POST requests
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
+      status: 405,
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ error: 'Method Not Allowed' })
-    };
+      }
+    });
   }
 
   try {
     // Parse the JSON body
-    const body = JSON.parse(event.body);
+    const body = await request.json();
     const { voiceId, text, modelId } = body;
 
     // Get the API key from environment variables
-    const apiKey = process.env.VITE_ELEVENLABS_API_KEY;
+    const apiKey = env.VITE_ELEVENLABS_API_KEY;
 
     if (!apiKey) {
-      return {
-        statusCode: 500,
+      return new Response(JSON.stringify({ error: 'Server configuration error: Missing API key' }), {
+        status: 500,
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ error: 'Server configuration error: Missing API key' })
-      };
+        }
+      });
     }
 
     if (!voiceId || !text || !modelId) {
-      return {
-        statusCode: 400,
+      return new Response(JSON.stringify({ error: 'Missing required parameters' }), {
+        status: 400,
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ error: 'Missing required parameters' })
-      };
+        }
+      });
     }
 
     console.log(`Making request to ElevenLabs for voice ${voiceId} with model ${modelId}`);
@@ -71,57 +71,53 @@ export const handler = async function (event, context) {
         errorDetail = 'Could not parse error response';
       }
 
-      return {
-        statusCode: response.status,
+      return new Response(JSON.stringify({
+        error: `Voice generation failed: ${response.status} ${response.statusText}`,
+        detail: errorDetail
+      }), {
+        status: response.status,
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          error: `Voice generation failed: ${response.status} ${response.statusText}`,
-          detail: errorDetail
-        })
-      };
+        }
+      });
     }
 
     // Get the audio data
-    const audioBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(audioBuffer);
+    const audioData = await response.arrayBuffer();
 
-    if (!buffer || buffer.length === 0) {
+    if (!audioData || audioData.byteLength === 0) {
       console.error('Received empty audio buffer from ElevenLabs');
-      return {
-        statusCode: 500,
+      return new Response(JSON.stringify({ error: 'Received empty audio from ElevenLabs API' }), {
+        status: 500,
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ error: 'Received empty audio from ElevenLabs API' })
-      };
+        }
+      });
     }
 
-    console.log(`Successfully generated audio: ${buffer.length} bytes`);
+    console.log(`Successfully generated audio: ${audioData.byteLength} bytes`);
 
     // Return the audio data with proper content type
-    return {
-      statusCode: 200,
+    return new Response(audioData, {
+      status: 200,
       headers: {
         'Content-Type': 'audio/mpeg',
-        'Content-Length': buffer.length.toString(),
-        // Add CORS headers to ensure the browser can receive the audio data
+        'Content-Length': audioData.byteLength.toString(),
+        // Add CORS headers if needed
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type'
-      },
-      body: buffer.toString('base64'),
-      isBase64Encoded: true
-    };
+      }
+    });
   } catch (error) {
     console.error('Server Error:', error);
 
-    return {
-      statusCode: 500,
+    return new Response(JSON.stringify({
+      error: 'Server error: ' + (error.message || 'Unknown error')
+    }), {
+      status: 500,
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ error: 'Server error: ' + (error.message || 'Unknown error') })
-    };
+      }
+    });
   }
-};
+}

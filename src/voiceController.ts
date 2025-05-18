@@ -64,11 +64,26 @@ export class VoiceController {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Voice generation failed');
+        // Try to parse error as JSON if possible
+        let errorMessage = 'Voice generation failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.detail || errorMessage;
+        } catch (e) {
+          errorMessage = `Voice generation failed: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
+      // Since we're expecting binary audio data, not JSON, use blob() directly
       const audioBlob = await response.blob();
+
+      // Check if we got a valid audio blob
+      if (!audioBlob || audioBlob.size === 0) {
+        throw new Error('Received empty audio data from server');
+      }
+
+      // Create a URL for the audio blob
       const audioUrl = URL.createObjectURL(audioBlob);
 
       return {
