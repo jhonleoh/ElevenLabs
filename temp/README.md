@@ -1,16 +1,15 @@
 # ElevenLabs AI Voice Generator
 
-A modern, responsive web application that allows you to generate speech from text using the ElevenLabs text-to-speech API.
+A web application that allows you to generate speech from text using the ElevenLabs text-to-speech API.
 
 ## Features
 
-- Responsive design for PC and mobile devices
-- Simple server status indicator (up/down)
+- Connect to the ElevenLabs API using environment variables
 - Browse and select from available ElevenLabs voice models
 - Choose between different AI voice models
 - Enter text to convert to speech
 - Generate high-quality AI voice audio
-- Play generated audio directly in browser with audio visualization
+- Play generated audio directly in browser
 - Download generated audio files
 
 ## Getting Started
@@ -24,24 +23,18 @@ A modern, responsive web application that allows you to generate speech from tex
 
 1. Clone this repository
 2. Install dependencies with:
-
-```bash
+```
 bun install
 ```
-
 3. Create a `.env` file in the root directory with your ElevenLabs API key:
-
 ```
 VITE_ELEVENLABS_API_KEY=your_api_key_here
 ```
-
 4. Start the development server:
-
-```bash
+```
 bun run dev
 ```
-
-5. Open your browser and navigate to [http://localhost:5173](http://localhost:5173)
+5. Open your browser and navigate to http://localhost:5173
 
 ## Deployment
 
@@ -52,6 +45,15 @@ bun run dev
 3. Add a new variable:
    - Key: `VITE_ELEVENLABS_API_KEY`
    - Value: Your ElevenLabs API key
+
+### Deploy to Cloudflare Pages
+
+1. Connect your GitHub repository to Cloudflare Pages
+2. In the Pages dashboard, go to Settings > Environment variables
+3. Add a new variable:
+   - Key: `VITE_ELEVENLABS_API_KEY`
+   - Value: Your ElevenLabs API key
+4. Save and deploy
 
 ### Deploy to Vercel
 
@@ -64,12 +66,11 @@ bun run dev
 
 ## Usage
 
-1. Check the server status indicator to ensure connectivity
-2. Select a voice model from the dropdown
-3. Choose an AI model (Multilingual v2 for quality, Flash v2.5 for speed)
-4. Enter the text you want to convert to speech
-5. Click "Generate Voice" to process your text
-6. Once generation is complete, you can play the audio or download it
+1. Select a voice model from the dropdown menu
+2. Choose an AI model (Multilingual v2 for quality, Flash v2.5 for speed)
+3. Enter the text you want to convert to speech
+4. Click "Generate Voice" to process your text
+5. Once generation is complete, you can play the audio or download it
 
 ## Tech Stack
 
@@ -77,6 +78,15 @@ bun run dev
 - TypeScript
 - Vite
 - Tailwind CSS
+
+## API Reference
+
+This application uses the [ElevenLabs API](https://api.elevenlabs.io/docs) for text-to-speech conversion.
+
+### Key Endpoints:
+
+- `/v1/voices` - Get available voices
+- `/v1/text-to-speech/{voice_id}` - Generate speech from text using a specific voice
 
 ## Privacy
 

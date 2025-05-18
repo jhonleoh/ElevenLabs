@@ -1,12 +1,13 @@
-# Netlify configuration file
 [build]
-  publish = "dist"
   command = "bun run build"
+  publish = "dist"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[dev]
+  command = "bun run dev"
+  port = 5173
+  targetPort = 5173
+  publish = "dist"
+  framework = "vite"
 
 [[redirects]]
   from = "/*"

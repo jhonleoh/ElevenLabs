@@ -10,20 +10,20 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
+    --primary: 210 100% 50%;
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 210 100% 50%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
+    --ring: 210 100% 50%;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -33,13 +33,13 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
+    --primary: 210 100% 50%;
     --primary-foreground: 240 5.9% 10%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
+    --accent: 210 100% 50%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
@@ -55,21 +55,36 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
-/* Custom styles for the voice changer app */
+/* Responsive container sizes */
+.container-md {
+  @apply w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Custom styles for the voice generator app */
+.app-header {
+  @apply text-4xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent;
+}
+
+.app-card {
+  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100 dark:border-gray-700;
+}
+
 .audio-player {
-  @apply w-full rounded-lg overflow-hidden shadow-md;
+  @apply w-full rounded-xl overflow-hidden shadow-lg;
+  @apply bg-gray-100 dark:bg-gray-700;
 }
 
 .file-upload-area {
-  @apply relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-all duration-300 hover:border-blue-500;
+  @apply relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center transition-all duration-300;
+  @apply hover:border-blue-500 dark:hover:border-blue-400;
 }
 
 .file-upload-area:hover {
-  @apply bg-blue-50;
+  @apply bg-blue-50 dark:bg-blue-900/20;
 }
 
 .loading-spinner {
@@ -77,26 +92,94 @@
 }
 
 .api-key-input {
-  @apply border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200;
+  @apply border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 w-full;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200;
+  @apply bg-white dark:bg-gray-800;
 }
 
 .button-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200;
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl;
+  @apply transition-all duration-200 shadow-md hover:shadow-lg;
 }
 
 .button-secondary {
-  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors duration-200;
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white;
+  @apply font-medium py-3 px-6 rounded-xl transition-all duration-200 shadow-sm hover:shadow;
 }
 
 .button-success {
-  @apply bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200;
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl;
+  @apply transition-all duration-200 shadow-md hover:shadow-lg;
+  @apply disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:shadow-none;
 }
 
 .select-voice {
-  @apply appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200;
+  @apply appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 w-full;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.5rem center;
+  background-position: right 1rem center;
   background-repeat: no-repeat;
   background-size: 1.5em 1.5em;
   padding-right: 2.5rem;
+}
+
+.server-status-error {
+  @apply mb-6 p-4 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-xl flex items-center gap-3;
+}
+
+.server-status-success {
+  @apply mb-6 p-4 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-xl flex items-center gap-3;
+}
+
+.input-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2;
+}
+
+.text-area {
+  @apply w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400;
+  @apply bg-white dark:bg-gray-800 min-h-[160px] resize-none;
+}
+
+.section-title {
+  @apply text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200;
+}
+
+/* Responsive design utilities */
+.grid-responsive {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+}
+
+/* Create a card like style with hover effects */
+.model-card {
+  @apply border border-gray-200 dark:border-gray-700 rounded-xl p-4;
+  @apply transition-all duration-200 cursor-pointer;
+  @apply hover:border-blue-500 hover:shadow-md;
+}
+
+.model-card.selected {
+  @apply border-blue-500 bg-blue-50 dark:bg-blue-900/20;
+}
+
+/* Better animation for loading states */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Create cool waveform visualization for audio */
+.audio-waveform {
+  @apply h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg overflow-hidden flex items-center;
+}
+
+.waveform-bar {
+  @apply bg-blue-500 dark:bg-blue-400 h-full w-1 mx-px rounded-sm;
 }
