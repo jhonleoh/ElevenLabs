@@ -43,7 +43,7 @@ export const customVoices: CustomVoice[] = [
   {
     voice_id: "yoZ06aMxZJJ28mfd3POQ",
     name: "Sam"
-  }
+  },
   {
     voice_id: "nPczCjzI2devNBz1zQrb",
     name: "Brian"
