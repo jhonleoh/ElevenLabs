@@ -47,7 +47,11 @@ export const customVoices: CustomVoice[] = [
   {
     voice_id: "nPczCjzI2devNBz1zQrb",
     name: "Brian"
-  }
+  },
+  {
+    voice_id: "1wg2wOjdEWKA7yQD8Kca",
+    name: "Father Christmas"
+  },
   // Add your own custom voices below:
   // {
   //   voice_id: "your-custom-voice-id-here",
