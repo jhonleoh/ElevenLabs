@@ -9,8 +9,7 @@ interface Model {
 }
 
 function App() {
-  // Use environment variable for API key
-  const [apiKey, setApiKey] = useState<string>(import.meta.env.VITE_ELEVENLABS_API_KEY || '');
+  // No longer need API key in frontend
   const [voices, setVoices] = useState<CustomVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [inputText, setInputText] = useState<string>('');
@@ -22,8 +21,8 @@ function App() {
   const [showCustomVoiceMessage, setShowCustomVoiceMessage] = useState(false);
   const [showWarningMessage, setShowWarningMessage] = useState(true);
 
-  // Create voice controller
-  const [voiceController] = useState<VoiceController>(new VoiceController(apiKey));
+  // Create voice controller (no need to pass API key)
+  const [voiceController] = useState<VoiceController>(new VoiceController(''));
 
   const models: Model[] = [
     {
@@ -43,10 +42,7 @@ function App() {
     fetchVoices();
   }, []);
 
-  // Update API key in controller when it changes
-  useEffect(() => {
-    voiceController.setApiKey(apiKey);
-  }, [apiKey, voiceController]);
+  // No longer need to update API key
 
   // Clear generated audio when inputs change
   useEffect(() => {
@@ -79,7 +75,7 @@ function App() {
   };
 
   const handleGenerateVoice = async () => {
-    if (!apiKey || !selectedVoice || !inputText) {
+    if (!selectedVoice || !inputText) {
       setError('Please select a voice and enter some text.');
       return;
     }

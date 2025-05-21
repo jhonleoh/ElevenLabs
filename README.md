@@ -1,6 +1,14 @@
 # ElevenLabs AI Voice Generator
 
-A simple React application for generating AI voices using the ElevenLabs API.
+A simple React application for generating AI voices using the ElevenLabs API with secure API key handling.
+
+## Security Improvements
+
+This version includes important security enhancements:
+
+- **⚠️ API Key Protection**: The ElevenLabs API key is no longer exposed in client-side code
+- **Server-side Proxy**: All requests to ElevenLabs API go through secure Cloudflare Functions
+- **Environment Variables**: API key is stored securely in Cloudflare Pages environment variables
 
 ## Features
 
@@ -24,15 +32,28 @@ All voices are defined in the `src/customVoices.ts` file, which includes several
 
 For detailed instructions on managing custom voices, see [CUSTOM_VOICES.md](src/CUSTOM_VOICES.md).
 
-## Setup
+## Local Development
 
 1. Clone this repository
-2. Create a `.env` file in the root directory with your ElevenLabs API key:
-   ```
-   VITE_ELEVENLABS_API_KEY=your_api_key_here
-   ```
-3. Install dependencies: `bun install`
-4. Start the development server: `bun run dev`
+2. Install dependencies: `bun install`
+3. Start the development server: `bun run dev`
+
+Note: For local development, you'll need to run the app with Wrangler to test Cloudflare Functions:
+```
+npm install -g wrangler
+wrangler pages dev --binding ELEVENLABS_API_KEY=your_api_key_here -- npm run dev
+```
+
+## Deployment on Cloudflare Pages
+
+1. Push your code to a GitHub repository
+2. Create a new Cloudflare Pages project and connect it to your repository
+3. During setup, add an environment variable:
+   - Name: `ELEVENLABS_API_KEY`
+   - Value: Your ElevenLabs API key
+4. Deploy the application
+
+This ensures your API key is securely stored in Cloudflare's environment and never exposed in client-side code.
 
 ## Usage
 
@@ -49,7 +70,9 @@ For detailed instructions on managing custom voices, see [CUSTOM_VOICES.md](src/
 - TypeScript
 - Vite
 - Tailwind CSS
+- Cloudflare Pages Functions
 
 ## Credits
 
 Made with ❤️ by Ruyi
+Security enhancements added to keep API keys safe

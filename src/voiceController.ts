@@ -2,20 +2,17 @@ import { CustomVoice, customVoices } from './customVoices';
 
 // Voice controller to handle operations related to voices
 export class VoiceController {
-  private apiKey: string;
-
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
+  constructor() {
+    // No need to store API key in frontend code
   }
 
-  // Get API key
+  // These methods are kept for backward compatibility but no longer store the key
   public getApiKey(): string {
-    return this.apiKey;
+    return '';
   }
 
-  // Set API key
-  public setApiKey(apiKey: string): void {
-    this.apiKey = apiKey;
+  public setApiKey(_apiKey: string): void {
+    // No-op, API key is now managed by server only
   }
 
   // Fetch voices - now only returns custom voices
@@ -34,14 +31,14 @@ export class VoiceController {
     }
   }
 
-  // Generate voice from text
+  // Generate voice from text using our secure proxy
   public async generateVoice(
     voiceId: string,
     text: string,
     modelId: string
   ): Promise<{ audioUrl: string | null, success: boolean, error: string | null }> {
     try {
-      if (!this.apiKey || !voiceId || !text) {
+      if (!voiceId || !text) {
         return {
           audioUrl: null,
           success: false,
@@ -49,25 +46,28 @@ export class VoiceController {
         };
       }
 
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      // Instead of direct API call with key, use our secure proxy endpoint
+      const response = await fetch('/api/tts', {
         method: 'POST',
         headers: {
-          'xi-api-key': this.apiKey,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           text: text,
-          model_id: modelId,
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5
-          }
+          voiceId: voiceId,
+          modelId: modelId
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Voice generation failed');
+        let errorMessage = 'Voice generation failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          // If response parsing fails, use generic error
+        }
+        throw new Error(errorMessage);
       }
 
       const audioBlob = await response.blob();
