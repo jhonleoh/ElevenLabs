@@ -21,8 +21,8 @@ function App() {
   const [showCustomVoiceMessage, setShowCustomVoiceMessage] = useState(false);
   const [showWarningMessage, setShowWarningMessage] = useState(true);
 
-  // Create voice controller (no need to pass API key)
-  const [voiceController] = useState<VoiceController>(new VoiceController(''));
+  // Create voice controller
+  const [voiceController] = useState<VoiceController>(new VoiceController());
 
   const models: Model[] = [
     {
@@ -265,7 +265,7 @@ function App() {
           {/* Generation Button */}
           <button
             onClick={handleGenerateVoice}
-            disabled={!apiKey || !selectedVoice || !inputText || isLoading || serverStatus === 'down'}
+            disabled={!selectedVoice || !inputText || isLoading || serverStatus === 'down'}
             className="button-success w-full"
           >
             {isLoading ? (
