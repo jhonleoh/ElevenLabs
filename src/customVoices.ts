@@ -60,6 +60,10 @@ export const customVoices: CustomVoice[] = [
     voice_id: "qNkzaJoHLLdpvgh5tISm",
     name: "Carter"
   },
+  {
+    voice_id: "qmLvGy4ccaAwYUFmj2Ov",
+    name: "Mhinye"
+  },
   // Add your own custom voices below:
   // {
   //   voice_id: "your-custom-voice-id-here",
